@@ -13,6 +13,8 @@ then run the app with
 python app.py
 ```
 
+you might have to set env varibales. [See below ](#set-up-your-environment-varibales)
+
 then navigate into the `packages/react-app`
 
 and run
