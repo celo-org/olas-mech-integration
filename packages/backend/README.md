@@ -59,23 +59,25 @@ touch my_script.py
 
 Edit my_script.py as follows:
 
+Find all possible tools in the [Olas mech](https://github.com/valory-xyz/mech/tree/main/packages/valory/customs). Just choose one of the folder names.
+
 ```python
 from mech_client.interact import interact, ConfirmationType
 
-prompt_text = 'Will Gnosis pay reach 100k cards in 2024?'
-agent_id = 6
-tool_name = "prediction-online"
-chain_config = "gnosis"
-private_key_path="ethereum_private_key.txt"
+prompt_text = 'Write a Haiku about web3 hackathons'
+   agent_id = 2
+    tool_name = "openai-gpt-3.5-turbo"
+    chain_config = "celo"
+    private_key_path="ethereum_private_key.txt"
 
-result = interact(
-    prompt=prompt_text,
-    agent_id=agent_id,
-    tool=tool_name,
-    chain_config=chain_config,
-    confirmation_type=ConfirmationType.ON_CHAIN,
-    private_key_path=private_key_path
-)
+    result = interact(
+        prompt=prompt_text,
+        agent_id=agent_id,
+        tool=tool_name,
+        chain_config=chain_config,
+        confirmation_type=ConfirmationType.ON_CHAIN,
+        private_key_path=private_key_path
+    )
 print(result)
 
 ```
