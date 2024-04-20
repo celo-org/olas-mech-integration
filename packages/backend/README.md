@@ -1,7 +1,33 @@
 # Add Olas to your dApp
 
 
-## set up the backend
+to run this example project, navigate into the `packages/backend` and run 
+
+ ```bash
+poetry shell
+```
+
+then run the app with
+
+```bash
+python app.py
+```
+
+then navigate into the `packages/react-app`
+
+and run
+
+```bash
+yarn run dev
+``` 
+
+and the app should be running
+
+
+### set this up in an existing project
+
+
+### set up the backend
 
 Set up a python project inside of our celo-composer. Or your existing dApp. 
 
@@ -212,6 +238,7 @@ export default async function handler(
 ) {
   const prompt = req.query.prompt; // Access the prompt sent from the frontend
   try {
+    // make sure to later exchange this endpoint for a hosted version
     const { data } = await axios.get(`http://127.0.0.1:5000/get-prompt?prompt=${prompt}`);
     res.status(200).json(data);
   } catch (error) {
