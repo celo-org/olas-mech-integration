@@ -1,197 +1,225 @@
-<!-- TITLE -->
-<p align="center"> 
-  <img width="100px" src="https://github.com/celo-org/celo-composer/blob/main/images/readme/celo_isotype.svg" align="center" alt="Celo" />
- <h2 align="center">Celo Composer</h2>
- <p align="center">Build, deploy, and iterate quickly on decentralized applications using Celo.</p>
-</p>
-  <p align="center">
-    <a href="https://github.com/celo-org/celo-composer/graphs/stars">
-      <img alt="GitHub Contributors" src="https://img.shields.io/github/stars/celo-org/celo-composer?color=FCFF52" />
-    </a>
-    <a href="https://github.com/celo-org/celo-composer/graphs/contributors">
-      <img alt="GitHub Contributors" src="https://img.shields.io/github/contributors/celo-org/celo-composer?color=E7E3D4" />
-    </a>
-    <a href="https://github.com/celo-org/celo-composer/issues">
-      <img alt="Issues" src="https://img.shields.io/github/issues/celo-org/celo-composer?color=E7E3D4" />
-    </a>
-    <a href="https://github.com/celo-org/celo-composer/pulls">
-      <img alt="GitHub pull requests" src="https://img.shields.io/github/issues-pr/celo-org/celo-composer?color=E7E3D4" />
-    </a>
-    <a href="https://opensource.org/license/mit/">
-      <img alt="MIT License" src="https://img.shields.io/badge/License-MIT-yellow.svg" />
-    </a>
-  </p>
-</p>
+# Call an AI agent from your Celo dApp
 
-<!-- TABLE OF CONTENTS -->
+Learn how to call an AI agent and pay for it in CELO. 
 
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
-    </li>
-    <li>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
-    </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
-  </ol>
-</details>
+This tutorial is based on the guide for the [Olas mech-client](https://github.com/valory-xyz/mech-client).
 
-<!-- ABOUT THE PROJECT -->
+This tutorial will guide you through integrating Olas into your dApp by setting up a backend, configuring the environment, and connecting to the frontend. By the end, you'll have a functional project that utilizes the Olas mech for generating prompts and interacting with blockchain tools.
 
-## About The Project
 
-Celo Composer allows you to quickly build, deploy, and iterate on decentralized applications using Celo. It provides a number of frameworks, examples, and Celo specific functionality to help you get started with your next dApp.
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-## Built With
-
-Celo Composer is built on Celo to make it simple to build dApps using a variety of front-end frameworks, and libraries.
-
-- [Celo](https://celo.org/)
-- [Solidity](https://docs.soliditylang.org/en/v0.8.19/)
-- [Next.js](https://nextjs.org/)
-- [React.js](https://reactjs.org/)
-- [Material UI](https://mui.com/)
-- [React Native](https://reactnative.dev/)
-- [Flutter](https://docs.flutter.dev/)
-- [React-celo](https://github.com/celo-org/react-celo/)
-- [Rainbowkit-celo](https://github.com/celo-org/rainbowkit-celo)
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-<!-- GETTING STARTED -->
+---
 
 ## Prerequisites
+Before you start, ensure you have the following installed:
+- Python 3.8+
+- Node.js and Yarn
+- [Poetry](https://python-poetry.org/docs/#installation) (for Python dependency management)
+- A MetaMask wallet to export a private key
+- A Quicknode account (for RPC and WSS endpoints)
 
-- Node
-- Git (v2.38 or higher)
+---
 
-## How to use Celo Composer
 
-The easiest way to start with Celo Composer is using `@celo/celo-composer`. This CLI tool lets you quickly start building dApps on Celo for multiple frameworks, including React (with either react-celo or rainbowkit-celo), React Native (w/o Expo), Flutter, and Angular. To get started, just run the following command, and follow the steps:
+This example project is built using the [Celo Composer](https://github.com/celo-org/celo-composer). You can do the quickstart by following [this guide](.backend/README.md). 
+
+Follow the guide below to call the mech from any dapp. 
+
+## Add the Agent to an Existing Project
+
+### 1. Set Up the Backend
+
+#### Initialize a Python Project
+Inside your dApp's directory, create a new backend folder and set up a Python project:
 
 ```bash
-npx @celo/celo-composer@latest create
+poetry new backend
+cd backend
 ```
 
-### Front-end framework
+#### Activate Poetry Environment
+Activate the Poetry shell:
 
-![Celo Composer select framework](https://github.com/celo-org/celo-composer/blob/main/images/readme/cc_step_1.png?raw=true)
+```bash
+poetry shell
+```
 
-### Web3 library (for react-app)
+#### Install Dependencies
+Install the `mech-client` package:
 
-![Celo Composer select framework](https://github.com/celo-org/celo-composer/blob/main/images/readme/cc_step_2.png?raw=true)
+```bash
+poetry add mech-client
+```
 
-### Smart contract framework
+---
 
-![Celo Composer tool selection](https://github.com/celo-org/celo-composer/blob/main/images/readme/cc_step_3.png?raw=true)
+### 2. Set Up the Environment
 
-### Subgraph
+#### Configure Private Key
 
-![Celo Composer subgraph support](https://github.com/celo-org/celo-composer/blob/main/images/readme/cc_step_4.png?raw=true)
+1. Create a file to store your private key securely:
+    ```bash
+    touch ethereum_private_key.txt
+    ```
 
-### Name your dApp
+2. Export your private key from [MetaMask](https://support.metamask.io/hc/en-us/articles/360015289632-How-to-export-an-account-s-private-key) and save it in `ethereum_private_key.txt`. It should be prefunded with some CELO. This agent will only run on Celo Mainnet.
 
-![Celo Composer dApp name](https://github.com/celo-org/celo-composer/blob/main/images/readme/cc_step_5.png?raw=true)
+3. Add the file to your `.gitignore` to prevent accidental uploads:
+    ```bash
+    echo ethereum_private_key.txt >> .gitignore
+    ```
 
-**_🔥Voila, you have a dApp ready to go. Voila, you have a dApp ready to go. Start building your dApp on Celo._**
+#### Add Environment Variables
+Create an `.env` file to store your RPC and WSS endpoints. We recommend using [Quicknode](https://www.quicknode.com/):
 
-### Getting started
+```bash
+MECHX_CHAIN_RPC=https://proud-proud-layer.celo-mainnet.quiknode.pro/<your-key>
+MECHX_WSS_ENDPOINT=wss://proud-proud-layer.celo-mainnet.quiknode.pro/<your-key>
+```
 
-Once your custom dApp has been created, just install dependencies, either with `yarn` or `npm i`, and run the respective script from the `package.json` file.
-## Supported Frameworks
+---
 
-### React
+### 3. Create the Script
 
-- Support for Website and Progressive Web Application.
-- Works with all major crypto wallets.
+#### Write the Python Script
+Create a script file:
 
-Check [package readme](https://github.com/celo-org/celo-composer/blob/main/packages/react-app/README.md) to learn more about.
+```bash
+touch my_script.py
+```
 
-### React Native
+Edit `my_script.py`:
 
-- Out of the box config, just focus on buidl.
-- Support for Android and IOS.
-- Works with and without [Expo](https://expo.dev/).
-- Working example app included.
+```python
+from mech_client.interact import interact, ConfirmationType
 
-Check [package readme](https://github.com/celo-org/celo-composer/blob/main/packages/react-native-app/README.md) to learn more about.
+def get_prompt(prompt_text):
+    agent_id = 2
+    tool_name = "openai-gpt-3.5-turbo"  # Replace with your tool
+    chain_config = "celo"
+    private_key_path = "ethereum_private_key.txt"
 
-### Flutter
+    result = interact(
+        prompt=prompt_text,
+        agent_id=agent_id,
+        tool=tool_name,
+        chain_config=chain_config,
+        confirmation_type=ConfirmationType.ON_CHAIN,
+        private_key_path=private_key_path
+    )
+    return result
+```
 
-- One command to get started - Type `flutter run` to start development in your mobile phone.
-- Works with all major mobile crypto wallets.
-- Support for Android, IOS (Web, Windows, and Linux coming soon).
-- Working example app included.
+#### Handle Errors
+If you encounter the error:
+```bash
+ModuleNotFoundError: No module named 'pkg_resources'
+```
+Resolve it by upgrading `setuptools`:
+```bash
+pip install --upgrade setuptools
+```
 
-Check [package readme](https://github.com/celo-org/celo-composer/blob/main/packages/flutter-app/README.md) to learn more about.
+#### Run the Script
+Execute the script:
+```bash
+python my_script.py
+```
 
-### Angular
+---
 
-- Support for Website and Progressive Web Application.
-- Works with all major crypto wallets.
+### 4. Set Up the API
 
-Check [package readme](https://github.com/celo-org/celo-composer/blob/main/packages/angular-app/README.md) to learn more about.
+#### Install Flask
+Install Flask and Flask-CORS:
+```bash
+pip install Flask flask-cors
+```
 
-<!-- USAGE EXAMPLES -->
+#### Create the API
+Create `app.py` and add the following:
 
-## 🔭 Learning Solidity
+```python
+from flask import Flask, jsonify, request
+from flask_cors import CORS
+from my_script import get_prompt
 
-📕 Read the docs: <https://docs.soliditylang.org>
+app = Flask(__name__)
+CORS(app)
 
-- [Primitive Data Types](https://solidity-by-example.org/primitives/)
-- [Mappings](https://solidity-by-example.org/mapping/)
-- [Structs](https://solidity-by-example.org/structs/)
-- [Modifiers](https://solidity-by-example.org/function-modifier/)
-- [Events](https://solidity-by-example.org/events/)
-- [Inheritance](https://solidity-by-example.org/inheritance/)
-- [Payable](https://solidity-by-example.org/payable/)
-- [Fallback](https://solidity-by-example.org/fallback/)
+@app.route('/get-prompt', methods=['GET'])
+def get_chat_gpt_request():
+    prompt = request.args.get('prompt', 'Write a Haiku about web3 hackathons?')
+    try:
+        response = get_prompt(prompt)
+        return jsonify({"success": True, "response": response}), 200
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
 
-📧 Learn the [Solidity globals and units](https://solidity.readthedocs.io/en/v0.8.19/units-and-global-variables.html)
+if __name__ == '__main__':
+    app.run(debug=True)
+```
 
-## Support
+---
 
-Join the Celo Discord server at <https://chat.celo.org>. Reach out on the dedicated repo channel [here](https://discord.com/channels/600834479145353243/941003424298856448).
+## Integrate with the Frontend
 
-<!-- ROADMAP -->
+### 1. Create an API Route
+Inside your Next.js project, create `pages/api/get-prompt.ts`:
 
-## Roadmap
+```typescript
+import type { NextApiRequest, NextApiResponse } from 'next';
+import axios from 'axios';
 
-See the [open issues](https://github.com/celo-org/celo-composer/issues) for a full list of proposed features (and known issues).
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  const prompt = req.query.prompt;
+  try {
+    const { data } = await axios.get(`http://127.0.0.1:5000/get-prompt?prompt=${prompt}`);
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+```
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+### 2. Add Functionality
+In your React component, define state and handlers:
 
-<!-- CONTRIBUTING -->
+```typescript
+const [yourPrompt, setYourPrompt] = useState('');
+const [response, setResponse] = useState<string | null>(null);
 
-## Contributing
+async function fetchPromptData(prompt: string) {
+  const res = await fetch(`/api/get-prompt?prompt=${encodeURIComponent(prompt)}`);
+  const data = await res.json();
+  setResponse(data.response);
+}
 
-We welcome contributions from the community.
+const handleFetchClick = () => {
+  if (yourPrompt) fetchPromptData(yourPrompt);
+};
+```
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+Add these elements to your component:
 
-## License
+```typescript
+<div>
+  <input
+    type="text"
+    value={yourPrompt}
+    onChange={(e) => setYourPrompt(e.target.value)}
+  />
+  <button onClick={handleFetchClick}>Fetch Prompt</button>
+  {response && <p>Response: {response}</p>}
+</div>
+```
 
-Distributed under the MIT License. See `LICENSE.txt` for more information.
+---
 
-<!-- CONTACT -->
-## Contact
+## Next Steps
+- **Testing**: Use Postman or `curl` to test your API before frontend integration.
+- **Deployment**: Consider hosting your backend using services like Heroku or AWS.
+- **Extensions**: Explore more tools available in the [Olas Mech library](https://github.com/valory-xyz/mech/tree/main/packages/valory/customs).
 
-- [@CeloDevs](https://twitter.com/CeloDevs)
-- [Discord](https://discord.com/invite/celo)
+---
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+Let me know if you'd like more adjustments!
